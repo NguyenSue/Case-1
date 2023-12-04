@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study 1</title>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(24, 23, 23);
+            background-color: rgba(26, 23, 23, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        #employeeFormInModal label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        #employeeFormInModal input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+
+        #showModalBtn, #closeModalBtn, #reviewEmployeeBtn {
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid gray;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>THÔNG TIN NHÂN VIÊN</h1>
+    <main class="container">
+        <div class="table" id="table-form_list">
+            <div class="table-staff">
+                <table id="EmployeeTable" border="1">
+                    <tr onclick="editemployee(this)">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>BaseSalary</th>
+                        <th>ProductSalary</th>
+                        <th>ProductQuantity</th>
+                        <th>Total</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <button>Sign in</button>
+    
+    <button id="showModalBtn">Add employee</button>
+    <div id="myModal" class="modal">
+        <div class="Usericon">
+            <img src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
+                alt="user">
+        </div>
+            <form id="employeeForm">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" required>
+
+                <label for="Fullname">Fullname</label>
+                <input type="text" id="Fullname" name="fullname" required>
+
+                <label for="Basesalary">Base Salary</label>
+                <input type="number" id="basesalary" name="basesalary" required>
+
+                <label for="productquantity">Quantity of products</label>
+                <input type="number" id="productquantity" name="productquantity" required>
+
+                <button type="button" onclick="addEmployee()">Add employees into table</button>
+                <button type="button" id="closeModalBtn" onclick="closeModal()">Đóng</button>
+            </form>
+    </div>
+
+     <button id="reviewEmployeeBtn" onclick="reviewEmployees()">Review Employee</button>
+
+         <script>
+            let employees = [];
+        
+            let showModalBtn = document.getElementById("showModalBtn");
+            showModalBtn.addEventListener("click", function () {
+                document.getElementById("myModal").style.display = "block";
+            });
+        
+            function addEmployee() {
+                let id = document.getElementById("id").value;
+                let fullName = document.getElementById("fullName").value;
+                let baseSalary = parseFloat(document.getElementById("baseSalary").value);
+                let productQuantity = parseInt(document.getElementById("productQuantity").value);
+    
+                let productSalary = 500;
+        
+                let employee = {
+                    id: id,
+                    fullName: fullName,
+                    baseSalary: baseSalary,
+                    productSalary: productSalary,
+                    productQuantity: productQuantity
+                };
+        
+                employees.push(employee);
+        
+                closeModal();
+            }
+        
+            function closeModal() {
+                document.getElementById("myModal").style.display = "none";
+            }
+        
+            function displayEmployees() {
+                let employeeTableBody = document.getElementById("employeeTableBody");
+                employeeTableBody.innerHTML = "";
+        
+                for (let i = 0; i < employees.length; i++) {
+                    let row = employeeTableBody.insertRow();
+                    let cell1 = row.insertCell(0);
+                    let cell2 = row.insertCell(1);
+                    let cell3 = row.insertCell(2);
+                    let cell4 = row.insertCell(3);
+                    let cell5 = row.insertCell(4);
+                    let cell6 = row.insertCell(5);
+        
+                    cell1.innerHTML = employees[i].id;
+                    cell2.innerHTML = employees[i].fullName;
+                    cell3.innerHTML = employees[i].baseSalary;
+                    cell4.innerHTML = employees[i].productSalary;
+                    cell5.innerHTML = employees[i].productQuantity;
+        
+                    let totalSalary = calculateTotalSalary(employees[i]);
+                    cell6.innerHTML = totalSalary;
+                }
+            }
+        
+            function calculateTotalSalary(employee) {
+                let totalSalary = employee.baseSalary + (employee.productSalary * employee.productQuantity);
+        
+                const targetProduct = 50;
+    
+                if (employee.productQuantity < targetProduct) {
+                    totalSalary *= 0.9;
+                }
+        
+                if (employee.productQuantity > targetProduct) {
+                    let extraProduct = employee.productQuantity - targetProduct;
+                    totalSalary += (extraProduct * 0.1 * employee.productSalary);
+                }
+        
+                return totalSalary.toFixed(2); 
+        
+        
+            function reviewEmployees() {
+                displayEmployees();
+            }
+        </script>
+</body>
+</html>
